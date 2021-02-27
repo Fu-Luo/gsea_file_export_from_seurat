@@ -1,0 +1,35 @@
+###gesa data file export function 
+### run the function first 
+### To use two different clusters or idents from a seurat object, first subset them into two separate objects. Then extract gene expression matrix. 
+matrix1<-seuratobject1@assays$integrated@scale.data
+matrix2<-seuratobject2@assays$integrated@scale.data
+Fu_gsea<-function(matrix1,matrix2,condition1,condition2){
+  table.name<-readline(prompt="Enter table name: ")
+  if (dim(matrix1)[1]!=dim(matrix2)[1]){
+    return("# of genes not match in two matrix")
+  }
+  else{
+    totalgene=dim(matrix1)[1]
+    cellcountcondition1=dim(matrix1)[2]
+    cellcountcondition2=dim(matrix2)[2]
+    combined.matrix=cbind(matrix1,matrix2)
+    combined.matrix<-as.data.frame(combined.matrix)
+    combined.matrix<-cbind("description"=NA,combined.matrix)
+    combined.matrix$description<-"NA"
+    combined.matrix<-rbind("row1"=NA,"row2"=NA,"row3"=NA,combined.matrix)
+    rownames(combined.matrix)[1:3]<-c("#1.2",totalgene,"NAME")
+    combined.matrix[3,]<-colnames(combined.matrix)
+    combined.matrix[2,1]<-cellcountcondition1+cellcountcondition2
+    colnames(combined.matrix)<-NULL
+    write.table(combined.matrix,file=paste(table.name,"gsea_data_table.txt.gct",sep="_"),na="",quote = FALSE,sep = "\t")
+    print(combined.matrix[1:5,1:5])
+    phenotype.matrix<-matrix(,nrow=3,ncol=cellcountcondition1+cellcountcondition2)
+    phenotype.matrix[1,1]<-c(paste(cellcountcondition1+cellcountcondition2,2,1,sep = " "))
+    phenotype.matrix[2,1]<-c(paste("#",condition1,condition2,sep = " "))
+    phenotype.matrix[3,1:cellcountcondition1]<-c(condition1)
+    phenotype.matrix[3,(cellcountcondition1+1):(cellcountcondition1+cellcountcondition2)]<-c(condition2)
+    write.table(phenotype.matrix,file=paste(table.name,"gsea_phenotype_table.txt.cls",sep="_"),na="",quote = FALSE,sep = "\t",row.names = FALSE,col.names = FALSE)
+  }
+  
+  
+}
