@@ -1,8 +1,8 @@
 ###gesa data file export function 
 ### run the function first 
 ### To use two different clusters or idents from a seurat object, first subset them into two separate objects. Then extract gene expression matrix. 
-matrix1<-seuratobject1@assays$integrated@scale.data
-matrix2<-seuratobject2@assays$integrated@scale.data
+##matrix1<-seuratobject1@assays$integrated@scale.data
+##matrix2<-seuratobject2@assays$integrated@scale.data
 Fu_gsea<-function(matrix1,matrix2,condition1,condition2){
   table.name<-readline(prompt="Enter table name: ")
   if (dim(matrix1)[1]!=dim(matrix2)[1]){
